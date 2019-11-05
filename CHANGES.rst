@@ -4,6 +4,10 @@ Changes
 2.0.0 (unreleased)
 ------------------
 
+- simplify utility.py to always ensure items order. imported data is always
+  appended at the end of existing taxonomies
+  [petschki]
+
 - Fix GenericSetup import/export in python3
   [erral]
 
