@@ -6,6 +6,8 @@ Changes
 
 - simplify utility.py to always ensure items order. imported data is always
   appended at the end of existing taxonomies
+
+- add uninstall handler to cleanup persistent utilites and generated behaviors
   [petschki]
 
 - Fix GenericSetup import/export in python3
