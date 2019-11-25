@@ -1,7 +1,13 @@
 Changes
 =======
 
-2.0.0 (unreleased)
+2.0.1 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
+2.0.0 (2019-11-25)
 ------------------
 
 - add ``moveUp/Down`` functionality to widget

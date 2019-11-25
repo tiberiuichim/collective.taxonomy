@@ -9,10 +9,10 @@ addons:
 matrix:
   include:
     - python: "2.7"
+      env: PLONE_VERSION=5.0.x
+    - python: "2.7"
       env: PLONE_VERSION=5.1.x
     - python: "2.7"
-      env: PLONE_VERSION=5.2.x
-    - python: "3.6"
       env: PLONE_VERSION=5.2.x
     - python: "3.7"
       env: PLONE_VERSION=5.2.x
@@ -40,7 +40,6 @@ install:
   - buildout annotate
   - buildout -N -q
 script:
-# Run code-analysis, except on Python 3.6, which mysteriously fails to find zc.buildout.
   - bin/code-analysis
   - bin/test
 after_success:
