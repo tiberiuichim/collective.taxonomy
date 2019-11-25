@@ -4,8 +4,12 @@ Changes
 2.0.0 (unreleased)
 ------------------
 
+- add ``moveUp/Down`` functionality to widget
+  [petschki]
+
 - simplify utility.py to always ensure items order. imported data is always
   appended at the end of existing taxonomies
+  [petschki]
 
 - add uninstall handler to cleanup persistent utilites and generated behaviors
   [petschki]

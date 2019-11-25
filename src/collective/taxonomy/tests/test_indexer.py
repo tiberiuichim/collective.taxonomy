@@ -32,28 +32,13 @@ class TestIndexer(unittest.TestCase):
         portal_catalog = api.portal.get_tool('portal_catalog')
         utility = queryUtility(ITaxonomy, name='collective.taxonomy.test')
         taxonomy = utility.data
-        taxonomy_test = schema.Set(
-            title=u"taxonomy_test",
-            description=u"taxonomy description schema",
-            required=False,
-            value_type=schema.Choice(
-                vocabulary=u"collective.taxonomy.taxonomies"),
-        )
-        portal_types = api.portal.get_tool('portal_types')
-        fti = portal_types.get('Document')
-        document_schema = fti.lookupSchema()
-        schemaeditor = IEditableSchema(document_schema)
-        schemaeditor.addField(taxonomy_test, name='taxonomy_test')
-        notify(ObjectAddedEvent(taxonomy_test, document_schema))
-        notify(FieldAddedEvent(fti, taxonomy_test))
 
         index = portal_catalog.Indexes['taxonomy_test']
         self.assertEqual(index.numObjects(), 0)
 
         self.document.taxonomy_test = []
         self.document.reindexObject()
-        query = {}
-        query['taxonomy_test'] = '1'
+        query = {'taxonomy_test': '1'}
         self.assertEqual(len(portal_catalog(query)), 0)
 
         taxo_val = taxonomy['en'][u'\u241fInformation Science\u241fChronology']
@@ -72,22 +57,7 @@ class TestIndexer(unittest.TestCase):
         portal_catalog = api.portal.get_tool('portal_catalog')
         utility = queryUtility(ITaxonomy, name='collective.taxonomy.test')
         taxonomy = utility.data
-        taxonomy_test = schema.Set(
-            title=u"taxonomy_test",
-            description=u"taxonomy description schema",
-            required=False,
-            value_type=schema.Choice(
-                vocabulary=u"collective.taxonomy.taxonomies"),
-        )
-        portal_types = api.portal.get_tool('portal_types')
-        fti = portal_types.get('Document')
-        document_schema = fti.lookupSchema()
-        schemaeditor = IEditableSchema(document_schema)
-        schemaeditor.addField(taxonomy_test, name='taxonomy_test')
-        notify(ObjectAddedEvent(taxonomy_test, document_schema))
-        notify(FieldAddedEvent(fti, taxonomy_test))
-        query = {}
-        query['taxonomy_test'] = '5'
+        query = {'taxonomy_test': '5'}
         taxo_val = taxonomy['en'][u'\u241fInformation Science\u241fSport']
         self.document.taxonomy_test = [taxo_val]
         self.document.reindexObject()

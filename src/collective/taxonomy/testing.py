@@ -26,6 +26,10 @@ class Fixture(PloneSandboxLayer):
         z2.uninstallProduct(app, 'Products.DateRecurringIndex')
 
     def setUpPloneSite(self, portal):
+        portal.portal_workflow.setDefaultChain(
+            'simple_publication_workflow')
+
+        self.applyProfile(portal, 'plone.app.contenttypes:plone-content')
         self.applyProfile(portal, 'collective.taxonomy:default')
         self.applyProfile(portal, 'collective.taxonomy:examples')
         setRoles(portal, TEST_USER_ID, ['Manager'])

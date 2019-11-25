@@ -16,9 +16,6 @@ class TestControlPanel(unittest.TestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
-        self.portal.portal_workflow.setDefaultChain(
-            'simple_publication_workflow')
-        applyProfile(self.portal, 'plone.app.contenttypes:plone-content')
         self.document = api.content.create(
             container=self.portal, type='Document', title='Doc')
         self.browser = Browser(self.layer['app'])
