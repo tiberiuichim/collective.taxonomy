@@ -1,21 +1,23 @@
 Changes
 =======
 
-2.0.1 (unreleased)
+2.1.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
-
-2.0.0 (2019-11-25)
-------------------
+New features:
 
 - add ``moveUp/Down`` functionality to widget
   [petschki]
 
+Bug Fixes:
+
 - simplify utility.py to always ensure items order. imported data is always
   appended at the end of existing taxonomies
   [petschki]
+
+
+2.0.0 (2019-11-25)
+------------------
 
 - add uninstall handler to cleanup persistent utilites and generated behaviors
   [petschki]
