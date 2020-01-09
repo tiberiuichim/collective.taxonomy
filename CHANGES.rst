@@ -20,6 +20,8 @@ Bug Fixes:
 ------------------
 
 - add uninstall handler to cleanup persistent utilites and generated behaviors
+- simplify utility.py to always ensure items order. imported data is always
+  appended at the end of existing taxonomies
   [petschki]
 
 - Fix GenericSetup import/export in python3
