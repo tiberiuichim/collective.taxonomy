@@ -9,7 +9,7 @@ export const mapStateToProps = ({ languages }) => ({
 })
 
 export const mapDispatchToProps = (dispatch, { index, parentId }) => ({
-  addNode: () => dispatch(addNode(parentId, index, uid(10)))
+  addNode: () => dispatch(addNode(parentId, index, "autoid-" + uid(10)))
 })
 
 export default connect(

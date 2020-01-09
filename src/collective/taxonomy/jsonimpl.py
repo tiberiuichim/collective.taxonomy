@@ -2,20 +2,17 @@
 import json
 import os
 
-from lxml import etree
-
 from BTrees.OOBTree import OOBTree
-from Products.Five.browser import BrowserView
-from plone import api
-from zope.component import queryMultiAdapter
-from zope.component import queryUtility
-from zope.i18n import translate
-
 from collective.taxonomy import PATH_SEPARATOR
 from collective.taxonomy.i18n import CollectiveTaxonomyMessageFactory as _
-from collective.taxonomy.interfaces import ITaxonomy
-from collective.taxonomy.interfaces import get_lang_code
+from collective.taxonomy.interfaces import ITaxonomy, get_lang_code
 from collective.taxonomy.vdex import TreeExport
+from lxml import etree
+from zope.component import queryMultiAdapter, queryUtility
+from zope.i18n import translate
+
+from plone import api
+from Products.Five.browser import BrowserView
 
 
 class EditTaxonomyData(TreeExport, BrowserView):
@@ -26,6 +23,7 @@ class EditTaxonomyData(TreeExport, BrowserView):
         self.request = request
         utility_name = request.get('taxonomy', '')
         taxonomy = queryUtility(ITaxonomy, name=utility_name)
+
         if not taxonomy:
             raise ValueError('Taxonomy `%s` could not be found.' % utility_name)  # noqa: E501
 
@@ -36,12 +34,14 @@ class EditTaxonomyData(TreeExport, BrowserView):
         item['key'] = root.find('termIdentifier').text
         captionnode = root.find('caption')
         translations = {}
+
         for langstringnode in captionnode.getchildren():
             translations[langstringnode.get('language')] = langstringnode.text
 
         item['translations'] = translations
         item['subnodes'] = []
         terms = root.findall('term')
+
         if terms:
             for child in terms:
                 item['subnodes'].append(self.generate_json(child))
@@ -63,6 +63,7 @@ class EditTaxonomyData(TreeExport, BrowserView):
             'subnodes': [],
             'default_language': self.taxonomy.default_language,
         }
+
         if root is not None:
             for term in root.findall('term'):
                 result['subnodes'].append(self.generate_json(term))
@@ -79,21 +80,33 @@ class EditTaxonomyData(TreeExport, BrowserView):
         supported_langs = language_tool.supported_langs
         languages_mapping = {
             get_lang_code(lang): mapping[get_lang_code(lang)].capitalize()
+
             for lang in supported_langs
         }
         # add taxonomy's default language if it is not in supported langs
         default_lang = self.taxonomy.default_language
         languages_mapping[default_lang] = mapping[default_lang].capitalize()
+
         return json.dumps(languages_mapping)
 
     def get_resource_url(self):
         """Return resource url."""
         node_env = os.environ.get('NODE_ENV', 'production')
+
         if node_env == 'development' and api.env.debug_mode():
             return "http://localhost:3000/static/edittaxonomydata.js"
         else:
             return '{}/++resource++taxonomy/edittaxonomydata.js'.format(
                 api.portal.get().absolute_url())
+
+
+# def transform_to_id(text):
+#     text = re.compile(r"['\"]").sub('', text)
+#     text = re.compile(r"[\W\-]+").sub('-', text)
+#     text = re.compile(r"\-+").sub('-', text)
+#     text = re.compile(r"(^\-+)|(\-+$)").sub('', text)
+#
+#     return text
 
 
 class ImportJson(BrowserView):
@@ -102,12 +115,14 @@ class ImportJson(BrowserView):
 
     def __call__(self):
         request = self.request
+
         if request.method == 'POST':
             request.stdin.seek(0)
             data = json.loads(request.stdin.read())
             taxonomy = queryUtility(ITaxonomy, name=data['taxonomy'])
             tree = data['tree']
             languages = data['languages']
+
             for language in languages:
                 if language not in taxonomy.data:
                     taxonomy.data[language] = OOBTree()
@@ -135,13 +150,20 @@ class ImportJson(BrowserView):
 
     def generate_data_for_taxonomy(self, parsed_data, language,
                                    path=PATH_SEPARATOR):
+
         result = []
+
         for item in parsed_data:
             new_key = item['key']
+
+            if new_key.startswith('autoid-'):
+                new_key = item['translations'].get(
+                    language, '').strip()
             title = item['translations'].get(language, '')
             new_path = u'{}{}'.format(path, title)
             result.append((new_path, new_key, ))
             subnodes = item.get('subnodes', [])
+
             if subnodes:
                 new_path = u'{}{}'.format(new_path, PATH_SEPARATOR)
                 result.extend(self.generate_data_for_taxonomy(
